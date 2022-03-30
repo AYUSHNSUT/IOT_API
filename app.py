@@ -14,15 +14,16 @@ cors = CORS(app)
 
 
 
-@app.route('/weather/', methods=['GET'])
+@app.route('/weather', methods=['GET'])
 def respond_weather():
     # Retrieve the arguements from url parameter
-    data = request.get_json(force=True)
-    data=data['exp']
+    data = request.args.get('exp')
+    print(data)
     data=data.split(',')
     data=[float(i) for i in data]
     print(data)
     # Make prediction using model loaded from disk as per the data.
+    model = pkl.load(open('model.pkl','rb'))
     prediction = model.predict([data])
     # Take the first value of prediction
     output = prediction[0]
@@ -32,6 +33,7 @@ def respond_weather():
 def predict():
     # Get the data from the POST request.
     data = request.get_json(force=True)
+    print(data)
     data=data['exp']
     data=data.split(',')
     data=[float(i) for i in data]
